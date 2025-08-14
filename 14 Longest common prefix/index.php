@@ -1,62 +1,25 @@
 <?php
+ class Solution {
 
-  class Solution {
-    /**
-     * @param String[] $strs
-     * @return String
-     */
-    function longestCommonPrefix($strs) {
-      $prefixList = $this -> getPrefixes($strs);
-      return $this -> getHighestCount($prefixList);
-        
-    }
-    private function getPrefixes($strs){
-      $prefixList = [];
-      foreach ($strs as $string) {
-        $prefix = substr($string, 0, 2);
-        array_push($prefixList, $prefix);
-        
+  /**
+   * @param String[] $strs
+   * @return String
+   */
+  function longestCommonPrefix($strs) {
+      for ($i = 0; $i < strlen($strs[0]); $i++) {
+          $prefix = $strs[0][$i];
+          foreach ($strs as $str) {
+            if (strlen($str) <= $i || $str[$i] != $prefix) break 2;
+          }
       }
-      return $prefixList;
-    }
-
-    private function getHighestCount($prefixList){
-      $counts = array_count_values($prefixList);
-      $highestvalue = 1;
-      $highestPrefix = '';
-      $keys = array_keys($counts);
-      
-      foreach ($counts as $key => $value) {
-        if ($value > $highestvalue) {
-          $highestPrefix = $key;
-          
-          # code...
-        }
-      }
-      return $highestPrefix;
-      
-    }
-
+      return substr($strs[0], 0, $i);
   }
+}
   
-
+  
   $solution = new Solution();
-  $myArray = ["flower","flow","flight"];
+  $myArray = ["a", 'ab'];
   echo $solution -> longestCommonPrefix($myArray)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
