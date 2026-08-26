@@ -1,19 +1,21 @@
 <?php
 
 
-class Solution {
+class Solution
+{
 
     /**
      * @param String $s
      * @param Integer $k
      * @return String
      */
-    function shortestBeautifulSubstring($s, $k) {
+    function shortestBeautifulSubstring($s, $k)
+    {
         $k = (int)$k;
         $s_array = str_split($s);
-        
+
         $ones = array_keys($s_array, "1");
-        if (count($ones) < $k){
+        if (count($ones) < $k) {
             return "";
         }
 
@@ -26,18 +28,34 @@ class Solution {
             $current_ones = array_slice($ones, $i, $k);
             $current_count = $current_ones[count($current_ones) - 1] - $current_ones[0] + 1;
 
-            if($current_count < $shortest_count){
+
+            if ($current_count < $shortest_count) {
                 $shortest_count = $current_count;
                 $shortest_sub = substr($s, $current_ones[0], $current_count);
-                array_pop($array_of_shortests);
+
                 array_push($array_of_shortests, $shortest_sub);
+               
             }
 
-            else if($current_count == $shortest_count){
-                $shortest_sub = substr($s, $current_ones[0], $current_count);
-                array_push($array_of_shortests, $shortest_sub);
+            if (count($array_of_shortests) > 1) {
+                if (count($array_of_shortests) > 1) {
+                    $longestIndex = 0;
+                    $longestLength = strlen($array_of_shortests[0]);
+
+                    foreach ($array_of_shortests as $index => $value) {
+                        if (strlen($value) > $longestLength) {
+                            $longestLength = strlen($value);
+                            $longestIndex = $index;
+                        }
+                    }
+
+                    unset($array_of_shortests[$longestIndex]);
+                    $array_of_shortests = array_values($array_of_shortests); // reindex
+                }
             }
+            // print_r($array_of_shortests);
         }
+
         $highest_indices_sum = 0;
         if (count($array_of_shortests) > 1){
             foreach ($array_of_shortests as $current_sub) {
@@ -47,8 +65,9 @@ class Solution {
                     $highest_indices_sum = $current_indices_sum;
                     $shortest_sub = $current_sub;
                 }
-                
+
             }
+
             return $shortest_sub;
 
         }
