@@ -23,20 +23,14 @@ class Solution
 
         $shortest_count = PHP_INT_MAX;
         $shortest_sub = "";
-
-        // Each group of k consecutive 1s gives us a candidate
         $break_num = count($ones) - $k;
 
         for ($i = 0; $i <= $break_num; $i++) {
 
-            // Get the positions of the current k 1s
             $current_ones = array_slice($ones, $i, $k);
 
-            // Length of the substring from first 1 to last 1
             $current_count =
                 $current_ones[$k - 1] - $current_ones[0] + 1;
-
-            // Get the actual substring
             $current_sub = substr(
                 $s,
                 $current_ones[0],
