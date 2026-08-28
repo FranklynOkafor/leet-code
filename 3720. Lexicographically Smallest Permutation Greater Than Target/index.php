@@ -1,7 +1,6 @@
 <?php
 class Solution
 {
-
     /**
      * @param String $s
      * @param String $target
@@ -9,61 +8,63 @@ class Solution
      */
     function lexGreaterPermutation($s, $target)
     {
+        $freq = array_fill(0, 26, 0);
 
+        foreach (str_split($s) as $ch) {
+            $freq[ord($ch) - 97]++;
+        }
 
+        $ans = $this->dfs($freq, $target, 0);
 
+        return $ans === null ? "" : $ans;
+    }
 
+    private function dfs(&$freq, $target, $pos)
+    {
+        $n = strlen($target);
 
+        // Reached the end while still equal -> invalid
+        if ($pos == $n) {
+            return null;
+        }
 
-        $results = [];
-        // Convert the string into an array of characters
-        $charArray = str_split($s);
+        $cur = ord($target[$pos]) - 97;
 
-        // Start the recursive backtracking
-        $this->backtrackPermute($charArray, 0, count($charArray) - 1, $results);
+        // Option 1: stay equal
+        if ($freq[$cur] > 0) {
+            $freq[$cur]--;
 
-        // Use array_unique to remove duplicates if the input string has repeating characters
-        $permutations = array_unique($results);
-        sort($permutations);
+            $res = $this->dfs($freq, $target, $pos + 1);
 
-        foreach ($permutations as $permutation) {
-            if ($permutation > $target) {
-                return $permutation;
+            $freq[$cur]++;
+
+            if ($res !== null) {
+                return chr($cur + 97) . $res;
             }
         }
 
-        return "";
-    }
-
-    /**
-     * Helper function that handles the backtracking logic.
-     */
-    private function backtrackPermute(array $chars, int $left, int $right, array &$results): void
-    {
-        if ($left === $right) {
-            $results[] = implode('', $chars);
-        } else {
-            for ($i = $left; $i <= $right; $i++) {
-                // Swap characters
-                $this->swapChars($chars, $left, $i);
-
-                // Recursively solve for the next character
-                $this->backtrackPermute($chars, $left + 1, $right, $results);
-
-                // Backtrack: Undo the swap for the next iteration
-                $this->swapChars($chars, $left, $i);
+        // Option 2: become greater here
+        for ($c = $cur + 1; $c < 26; $c++) {
+            if ($freq[$c] == 0) {
+                continue;
             }
-        }
-    }
 
-    /**
-     * Swaps two elements in an array.
-     */
-    private function swapChars(array &$chars, int $i, int $j): void
-    {
-        $temp = $chars[$i];
-        $chars[$i] = $chars[$j];
-        $chars[$j] = $temp;
+            $freq[$c]--;
+
+            $suffix = "";
+
+            for ($i = 0; $i < 26; $i++) {
+                if ($freq[$i] > 0) {
+                    $suffix .= str_repeat(chr($i + 97), $freq[$i]);
+                }
+            }
+
+            $freq[$c]++;
+
+            return chr($c + 97) . $suffix;
+        }
+
+        return null;
     }
 }
 
