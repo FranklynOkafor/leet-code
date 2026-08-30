@@ -5,5 +5,5 @@
 // //     $freq[ord($ch) - 97]++;
 // // }
 // $cur = ord($target[1]) - 97;
-print_r(strrev('red'));
+print_r([1,2,3,4] > [1,1,1,1]);
  
